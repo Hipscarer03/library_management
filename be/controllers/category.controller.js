@@ -1,6 +1,6 @@
 const Category = require("../models/category.model");
 
-async function InsertCategory(req, res) {
+async function createCategory(req, res) {
     const { category_id, name } = req.body;
     if (!(await checkEmpty(category_id, name))) {
         res
@@ -42,3 +42,10 @@ async function deleteCategory(req, res) {
         res.status(200).json(sv);
     }
 }
+
+async function getAllCategory(req, res) {
+    const sv = await Category.find();
+    res.status(200).json(sv);
+}
+
+module.exports = { createCategory, updateCategory, deleteCategory, getAllCategory };

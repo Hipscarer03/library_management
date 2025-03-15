@@ -1,27 +1,57 @@
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../config/dotenv.config");
+const { SECRET_KEY } = require("../config/dotenv");
+const Db = require("../models");
 
-// Dữ liệu giả lập
-const users = [{ id: 1, username: "admin", password: "password123" }];
+const register = async (req, res) => {
+  const { email, password, role } = req.body;
+  const user = await Db.User.findOne({ email, password });
+  if (user) {
+    return res.status(400).json({ message: "email đã tồn tại" });
+  }
+  let newUser = {
+    user_id: Db.User.length + 1,
+    email,
+    password,
+    role,
+  };
+  await Db.User.create(newUser);
+  res.json({ message: "Register successfully" });
+};
 
-const login = (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find((u) => u.username === username && u.password === password);
+const login = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await Db.User.findOne({ email, password });
+  
+  console.log(user);
 
-  if (!user) {
-    return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu" });
+  if (!user || user.length === 0) {
+    return res.status(401).json({ message: "Sai email hoặc mật khẩu" });
   }
 
-  const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, {
-    expiresIn: "1h",
+  const token = jwt.sign({ id: user.id, role: user.role }, SECRET_KEY, {
+    expiresIn: "8h",
   });
 
   res.json({ token });
 };
 
-// const logout = (req, res) => {
-//   res.json({ message: "Đăng xuat thanh cong" });
-// }
-;
+const logout = (req, res) => {
+  res.json({ message: "Đăng xuat thanh cong" });
+};
 
-module.exports = { login, logout };
+const getUserInfo = async (req, res) => {
+  const token = req.params.token;
+
+  if (!token) {
+    return res.status(400).json({ message: "Token không được cung cấp" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, SECRET_KEY);
+    res.status(200).json({ message: "Giải mã thành công", user: decoded });
+  } catch (err) {
+    res.status(403).json({ message: "Token không hợp lệ", error: err.message });
+  }
+}
+
+module.exports = { login, logout, register , getUserInfo};
