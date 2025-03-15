@@ -33,8 +33,8 @@ const borrowInfoSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['borrowed', 'returned', 'overdue'],
-    default: 'borrowed'
+    enum: ['borrowing', 'returned', 'overdue'],
+    default: 'borrowing'
   }
 });
 

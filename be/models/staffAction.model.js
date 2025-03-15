@@ -1,5 +1,4 @@
-const { activeUser } = require("../controllers/user.controller");
-
+const mongoose = require("mongoose");
 const StaffActionSchema = new mongoose.Schema(
   {
     action_id: {

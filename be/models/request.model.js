@@ -27,14 +27,16 @@ const requestSchema = new mongoose.Schema({
       },
     },
     book_suggestion: {
-      title: {
-        type: String,
-      },
-      author: {
-        type: String,
-      },
-      reason: {
-        type: String,
+      type: {
+        title: {
+          type: String,
+        },
+        author: {
+          type: String,
+        },
+        reason: {
+          type: String,
+        },
       },
       required: function () {
         return this.request_type === "suggest_book";

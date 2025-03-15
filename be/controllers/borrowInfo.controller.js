@@ -1,53 +1,44 @@
 const BorrowInfo = require("../models/borrowInfo.model");
+const Book = require("../models/book.model");
 
-const checkEmpty = async (
-  user_id,
-  book_id,
-  borrow_date,
-  due_date,
-  return_date,
-  status
-) => {
-  if (
-    !user_id ||
-    !book_id ||
-    !borrow_date ||
-    !due_date ||
-    !return_date ||
-    !status
-  ) {
+const checkEmpty = async (user_id, book_id, borrow_date, due_date) => {
+  if (!user_id || !book_id || !borrow_date || !due_date) {
     return false;
   }
   return true;
 };
-async function CreateBorrowInfo(req, res) {
-  const { user_id, book_id, borrow_date, due_date, return_date, status } =
-    req.body;
 
-  if (
-    !(await checkEmpty(
-      user_id,
-      book_id,
-      borrow_date,
-      due_date,
-      return_date,
-      status
-    ))
-  ) {
+checkBookExist = async (book_id) => {
+  const book = await Book.findById(book_id);
+  if (book) {
+    return true;
+  }
+  return false;
+};
+
+async function createBorrowInfo(req, res) {
+  const { user_id, book_id, borrow_date, due_date } = req.body;
+
+  if (!(await checkEmpty(user_id, book_id, borrow_date, due_date))) {
     res
       .status(400)
-      .send(
-        "user_id, book_id, borrow_date, due_date, return_date, status is required"
-      );
+      .send("user_id, book_id, borrow_date, due_date, return_date is required");
     return;
   }
+
+  if (!(await checkBookExist(book_id))) {
+    res.status(404).send("Not found Book with id " + book_id + "\n");
+    return;
+  }
+
   const borrowInfo = new BorrowInfo({
+    borrow_info_id: new Date().getTime().toString(),
     user_id,
     book_id,
     borrow_date,
     due_date,
-    return_date,
-    status,
+    gid: 4,
+    status: "borrowing",
   });
   await borrowInfo.save();
   res.status(201).json(borrowInfo);
@@ -73,7 +64,7 @@ async function reExtendBorrrowTime(req, res) {
     res.status(404).send("Not found BorrowInfo with id " + id + "\n");
   } else {
     let today = new Date();
-    const due_date = today.setDate(today.getDate() + 7); 
+    const due_date = today.setDate(today.getDate() + 7);
     borrowInfo.due_date = due_date;
     borrowInfo.gid = 4;
     await borrowInfo.save();
@@ -101,4 +92,9 @@ async function returnBook(req, res) {
   }
 }
 
-module.exports = { CreateBorrowInfo, extendBorrrowTime, returnBook, reExtendBorrrowTime };
+module.exports = {
+  createBorrowInfo,
+  extendBorrrowTime,
+  returnBook,
+  reExtendBorrrowTime,
+};

@@ -4,6 +4,8 @@ async function checkEmpty(
   book_id,
   title,
   author,
+  publisher,
+  publishDate,
   category,
   isbn,
   total_copies,
@@ -13,6 +15,8 @@ async function checkEmpty(
     !book_id ||
     !title ||
     !author ||
+    !publisher ||
+    !publishDate ||
     !category ||
     !isbn ||
     !total_copies ||
@@ -31,28 +35,36 @@ async function checkExist(book_id, isbn) {
   return false;
 }
 
-const SearchBook = async (req, res) => {
-  const {page, limit, filterBy, keyword} = req.body;
-  const books = await Book.find({ [filterBy]: keyword }).limit(limit).skip((page - 1) * limit);
+const getBooks = async (req, res) => {
+  const { page, limit, filterBy, keyword } = req.body;
+  const books = await Book.find({ [filterBy]: keyword })
+    .limit(limit)
+    .skip((page - 1) * limit);
   res.status(200).json(books);
 };
 
-const InsertBook = async (req, res) => {
+const createBook = async (req, res) => {
   const {
     book_id,
     title,
     author,
+    image,
+    pageNumber,
+    publisher,
+    publishDate,
     category,
     isbn,
     total_copies,
     available_copies,
   } = req.body;
-  // console.log(req.body);
+  console.log(req.body);
   if (
     !(await checkEmpty(
       book_id,
       title,
       author,
+      publisher,
+      publishDate,
       category,
       isbn,
       total_copies,
@@ -62,7 +74,7 @@ const InsertBook = async (req, res) => {
     res
       .status(400)
       .send(
-        "  book_id, title, author, category, isbn, total_copies, available_copies is required"
+        "  book_id, title, author, category, publisher, publishDate, isbn, total_copies, available_copies is required"
       );
     return;
   }
@@ -70,51 +82,86 @@ const InsertBook = async (req, res) => {
     res.status(400).send(" book_id or isbn of this book is exist");
     return;
   } else {
-    const sv = new Book({});
-    await sv.save();
-    res.status(201).json(sv);
+    const newBook = new Book({
+      book_id: book_id,
+      title: title,
+      author: author,
+      image: image,
+      pageNumber: pageNumber,
+      publisher: publisher,
+      publishDate: publishDate,
+      category: category,
+      isbn: isbn,
+      total_copies: total_copies,
+      available_copies: available_copies ? available_copies : total_copies,
+    });
+
+    await newBook.save();
+    res.status(201).json({"message": "Create book successfully", "newBook": newBook});
   }
 };
 
-const FindById = async (req, res) => {
+const getBookById = async (req, res) => {
   const id = req.params.id;
   const book = await Book.findById(id);
   if (!book) {
     res.status(404).send("Not found Book with id " + id + "\n");
   } else {
-    res.status(200).json(sv);
+    res.status(200).json(book);
   }
 };
 
-const UpdateBook = async (req, res) => {
+const updateBook = async (req, res) => {
   const id = req.params.id;
-  const { BookCode, BookName, Mark, Gender } = req.body;
-  const sv = await Book.findById(id);
-  if (!sv) {
+  const {
+    book_id,
+    title,
+    author,
+    image,
+    pageNumber,
+    publisher,
+    publishDate,
+    category,
+    isbn,
+    total_copies,
+    available_copies,
+  } = req.body;
+  const book = await Book.findById(id);
+  if (!book) {
     res.status(404).send("Not found Book with id " + id + "\n");
   } else {
-    sv.BookCode = BookCode;
-    sv.BookName = BookName;
-    await sv.save();
-    res.status(200).json(sv);
+    book.book_id = book_id;
+    book.title = title;
+    book.author = author;
+    book.image = image;
+    book.pageNumber = pageNumber;
+    book.publisher = publisher;    
+    book.publishDate = publishDate;
+    book.category = category;
+    book.isbn = isbn;
+    book.total_copies = total_copies;    
+    book.available_copies = available_copies ? available_copies : total_copies;
+    await book.save();
+    res.status(200).json(book);
   }
 };
 
-const DeleteBook = async (req, res) => {
+const deleteBook = async (req, res) => {
   const id = req.params.id;
-  const sv = await Book.findById(id);
-  if (!sv) {
+  const book = await Book.findById(id);
+  if (!book) {
     res.status(404).send("Not found Book with id " + id + "\n");
   } else {
-    await sv.remove();
-    res.status(200).json(sv);
+    book.isDeleted = true;
+    await book.save();
+    res.status(200).json(book);
   }
 };
 
 module.exports = {
-  SearchBook,
-  InsertBook,
-  FindById,
-  UpdateBook,
-  DeleteBook,
+  getBooks,
+  getBookById,
+  createBook,
+  updateBook,
+  deleteBook,
 };
