@@ -9,12 +9,10 @@ const FineSchema = new mongoose.Schema(
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
     },
     book_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Book",
-      required: true,
     },
     amount: { type: Number, required: true },
     reason: {
@@ -31,4 +29,4 @@ const FineSchema = new mongoose.Schema(
 
 const Fine = mongoose.model("Fine", FineSchema);
 
-module.exports = { Fine };
+module.exports = Fine;
