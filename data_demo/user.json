@@ -1,0 +1,102 @@
+[
+    {
+      "user_id": "U001",
+      "full_name": "Admin User",
+      "email": "admin@example.com",
+      "password": "AdminPass123",
+      "phone": "0123456789",
+      "role": "staff",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    },
+    {
+      "user_id": "U002",
+      "full_name": "Alice Johnson",
+      "email": "alice@example.com",
+      "password": "StudentPass123",
+      "phone": "0987654321",
+      "role": "student",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    },
+    {
+      "user_id": "U003",
+      "full_name": "Bob Smith",
+      "email": "bob@example.com",
+      "password": "StudentPass123",
+      "phone": "0975312468",
+      "role": "student",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    },
+    {
+      "user_id": "U004",
+      "full_name": "Charlie Brown",
+      "email": "charlie@example.com",
+      "password": "StudentPass123",
+      "phone": "0965874123",
+      "role": "student",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    },
+    {
+      "user_id": "U005",
+      "full_name": "David Wilson",
+      "email": "david@example.com",
+      "password": "StudentPass123",
+      "phone": "0952143658",
+      "role": "student",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    },
+    {
+      "user_id": "U006",
+      "full_name": "Emma Davis",
+      "email": "emma@example.com",
+      "password": "StudentPass123",
+      "phone": "0945123678",
+      "role": "student",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    },
+    {
+      "user_id": "U007",
+      "full_name": "Frank Miller",
+      "email": "frank@example.com",
+      "password": "StudentPass123",
+      "phone": "0932147856",
+      "role": "student",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    },
+    {
+      "user_id": "U008",
+      "full_name": "Grace Lee",
+      "email": "grace@example.com",
+      "password": "StudentPass123",
+      "phone": "0923654781",
+      "role": "student",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    },
+    {
+      "user_id": "U009",
+      "full_name": "Henry Thomas",
+      "email": "henry@example.com",
+      "password": "StudentPass123",
+      "phone": "0914523678",
+      "role": "student",
+      "status": "active",
+      "borrowed_books": [],
+      "fines": []
+    }
+  ]
+  

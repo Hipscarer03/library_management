@@ -1,5 +1,6 @@
 const BorrowInfo = require("../models/borrowInfo.model");
 const Book = require("../models/book.model");
+const Fine = require("../models/fine.model");
 
 const checkEmpty = async (user_id, book_id, borrow_date, due_date) => {
   if (!user_id || !book_id || !borrow_date || !due_date) {
@@ -8,12 +9,44 @@ const checkEmpty = async (user_id, book_id, borrow_date, due_date) => {
   return true;
 };
 
-checkBookExist = async (book_id) => {
+const checkBookExist = async (book_id) => {
   const book = await Book.findById(book_id);
   if (book) {
     return true;
   }
   return false;
+};
+
+const getBorrowInfo = async (req, res) => {
+  try {
+    const borrowInfo = await BorrowInfo.find();
+    res.status(200).json(borrowInfo);
+  } catch (err) {
+    console.log(err);
+  }
+};
+const getBorrowInfoByUserId = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const borrowInfoList = await BorrowInfo.find({ user_id: id });
+
+    const formatBorrowInfo = await Promise.all(
+      borrowInfoList.map(async (borrowInfo) => {
+        const book = await Book.findById(borrowInfo.book_id);
+        return {
+          ...borrowInfo.toObject(), // Chuyển mongoose document thành object thường
+          title: book.title,
+          isbn: book.isbn,
+          image: book.image,
+        };
+      })
+    );
+
+    res.status(200).json(formatBorrowInfo);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 async function createBorrowInfo(req, res) {
@@ -73,6 +106,7 @@ async function reExtendBorrrowTime(req, res) {
 }
 
 async function returnBook(req, res) {
+  const id = req.params.id;
   const { user_id } = req.body;
   const borrowInfo = await BorrowInfo.findById(id);
   if (!borrowInfo) {
@@ -97,4 +131,6 @@ module.exports = {
   extendBorrrowTime,
   returnBook,
   reExtendBorrrowTime,
+  getBorrowInfoByUserId,
+  getBorrowInfo,
 };

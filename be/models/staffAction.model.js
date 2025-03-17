@@ -12,6 +12,7 @@ const StaffActionSchema = new mongoose.Schema(
     },
     action_type: {
       type: String,
+
       enum: [
         "approve_reservation",
         "approve_re_extension",
@@ -35,4 +36,4 @@ const StaffActionSchema = new mongoose.Schema(
 
 const StaffAction = mongoose.model("StaffAction", StaffActionSchema);
 
-module.exports = { StaffAction };
+module.exports = StaffAction;

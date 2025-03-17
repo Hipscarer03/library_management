@@ -1,0 +1,5 @@
+const GREEN_THEME = "#2F855A";
+const BROWN_THEME = "#A68B6D";
+const GRAY_THEME = "#FAF3E0";
+
+export { GREEN_THEME, BROWN_THEME, GRAY_THEME };

@@ -1,0 +1,33 @@
+[
+    {
+      "category_id": "C001",
+      "name": "Programming",
+      "status": "active"
+    },
+    {
+      "category_id": "C002",
+      "name": "Data Science",
+      "status": "active"
+    },
+    {
+      "category_id": "C003",
+      "name": "Cybersecurity",
+      "status": "active"
+    },
+    {
+      "category_id": "C004",
+      "name": "Cloud Computing",
+      "status": "active"
+    },
+    {
+      "category_id": "C005",
+      "name": "Artificial Intelligence",
+      "status": "active"
+    },
+    {
+      "category_id": "C006",
+      "name": "Web Development",
+      "status": "active"
+    }
+  ]
+  
